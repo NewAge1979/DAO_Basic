@@ -12,6 +12,6 @@ public class ProductsServiceImpl implements ProductsService {
     private final ProductsRepository repository;
     @Override
     public List<String> getProductsName(String name) {
-        return repository.getProductsName(name).orElse(null);
+        return repository.getProductsName(name);
     }
 }

@@ -1,6 +1,5 @@
 package org.example.basic.controller;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.example.basic.service.ProductsServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ public class ProductController {
     private final ProductsServiceImpl service;
 
     @GetMapping(value = "/fetch-product", produces = "application/json")
-    public ResponseEntity<String> getProductByName(@RequestParam(name = "name") String name) {
-        return new ResponseEntity<>(new Gson().toJson(service.getProductsName(name)), HttpStatus.OK);
+    public ResponseEntity<String> getProductByName(@RequestParam String name) {
+        return new ResponseEntity<>(service.getProductsName(name).toString(), HttpStatus.OK);
     }
 }

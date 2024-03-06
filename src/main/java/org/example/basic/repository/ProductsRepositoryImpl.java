@@ -1,6 +1,5 @@
 package org.example.basic.repository;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,18 +9,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-@RequiredArgsConstructor
 public class ProductsRepositoryImpl implements ProductsRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final String query;
 
-    public Optional<List<String>> getProductsName(String name) {
-        return Optional.of(
-                jdbcTemplate.queryForList(read("script1.sql"), Map.of("name", name), String.class)
-         );
+    public ProductsRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.query = read("script1.sql");
+    }
+
+    public List<String> getProductsName(String name) {
+        return jdbcTemplate.queryForList(query, Map.of("name", name), String.class);
     }
 
     private static String read(String scriptFileName) {
