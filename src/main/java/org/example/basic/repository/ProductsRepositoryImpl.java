@@ -1,28 +1,29 @@
 package org.example.basic.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class ProductsRepositoryImpl implements ProductsRepository {
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private final EntityManager entityManager;
     private final String query;
 
-    public ProductsRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductsRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
         this.query = read("script1.sql");
     }
 
     public List<String> getProductsName(String name) {
-        return jdbcTemplate.queryForList(query, Map.of("name", name), String.class);
+        return entityManager.createQuery(query).setParameter("name", name).getResultList();
     }
 
     private static String read(String scriptFileName) {
